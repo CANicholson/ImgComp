@@ -16,12 +16,31 @@ t2 = t1{1};
 
 %%%%% Load source image %%%%%
 if t2 == "NT"
-    fnameload = dir(fullfile("C:\Users\callumnicholson\Downloads\ImgComp-master\ImgComp-master\Natural\", '*.jpg'));
+    addpath Natural;
+    cd Natural;
+    thisFolder = pwd;
+    cd ..;
+    filePattern = sprintf('%s/*.jpg', thisFolder);
+    baseFileNames = dir(filePattern);
+    numberOfTrainingFiles = length(baseFileNames);
+    for f=1 : numberOfTrainingFiles
+        fullFileName = fullfile(thisFolder, baseFileNames(f).name);
+        fnameload{f} = fullFileName;
+    end
 else
-    fnameload = dir(fullfile("C:\Users\callumnicholson\Downloads\ImgComp-master\ImgComp-master\Mandmade\", '*.jpg'));
+    addpath Manmade;
+    cd Manmade;
+    thisFolder = pwd;
+    cd ..;
+    filePattern = sprintf('%s/*.jpg', thisFolder);
+    baseFileNames = dir(filePattern);
+    numberOfTrainingFiles = length(baseFileNames);
+    for f=1 : numberOfTrainingFiles
+        fullFileName = fullfile(thisFolder, baseFileNames(f).name);
+        fnameload{f} = fullFileName;
+    end
 end
 disp(t2);
-fnameload = fnameload';
 [nf mf] = size(fnameload);              
 
 fname_order = randperm(mf);             %Random source image
@@ -89,15 +108,12 @@ function fname = loadimage(str_title)
     end
     numberOfFolders = length(listOfFolderNames);
     fname = {};
-    %iterate through all folder and search for all .mat files
+    %iterate through all folder and search for all .jpg files
     for k=1: numberOfFolders
         thisFolder = listOfFolderNames{k};
         filePattern = sprintf('%s/*.jpg', thisFolder);
         baseFileNames = dir(filePattern);
         numberOfTrainingFiles = length(baseFileNames);
-   
-        %iterate through each file, turning them into long vectors and adding
-        %them to the dataset
         for f=1 : numberOfTrainingFiles
             fullFileName = fullfile(thisFolder, baseFileNames(f).name);
             fname{f} = fullFileName;
